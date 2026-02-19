@@ -1,0 +1,22 @@
+:root {
+  --ion-font-family: 'Avenir Next', 'SF Pro Rounded', 'Trebuchet MS', sans-serif;
+
+  --ion-color-primary: #2a5cff;
+  --ion-color-primary-rgb: 42, 92, 255;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-shade: #254fdf;
+  --ion-color-primary-tint: #406dff;
+
+  --ion-color-secondary: #1f2b4d;
+  --ion-color-secondary-rgb: 31, 43, 77;
+  --ion-color-secondary-contrast: #ffffff;
+
+  --ion-color-success: #0f9d71;
+  --ion-color-warning: #f39b3d;
+
+  --ion-background-color: #eef3ff;
+  --ion-text-color: #1f2b4d;
+
+  --app-card-bg: rgba(255, 255, 255, 0.72);
+  --app-card-border: rgba(255, 255, 255, 0.58);
+}

@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum TransactionType {
+  FIXED
+  VARIABLE
+  EXTRA
+  SAVING
+}
+
+model User {
+  id                 String              @id @default(cuid())
+  email              String              @unique
+  passwordHash       String
+  displayName        String
+  avatar             String
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  settings           Settings?
+  transactions       Transaction[]
+  idempotencyRecords IdempotencyRecord[]
+}
+
+model Settings {
+  id                    String   @id @default(cuid())
+  userId                String   @unique
+  salaryMonthly         Float    @default(0)
+  currency              String   @default("USD")
+  userSavingsGoalMonthly Float?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model HouseholdSettings {
+  id                           Int      @id @default(1)
+  householdSavingsGoalMonthly  Float    @default(0)
+  currency                     String   @default("USD")
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt
+}
+
+model Transaction {
+  id          String          @id @default(cuid())
+  userId      String
+  type        TransactionType
+  amount      Float
+  description String?
+  date        DateTime        @default(now())
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  idempotencyRecord IdempotencyRecord?
+
+  @@index([userId, date])
+}
+
+model IdempotencyRecord {
+  id            String      @id @default(cuid())
+  key           String
+  userId        String
+  transactionId String
+  createdAt     DateTime    @default(now())
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+
+  @@unique([key, userId])
+  @@unique([transactionId])
+}
